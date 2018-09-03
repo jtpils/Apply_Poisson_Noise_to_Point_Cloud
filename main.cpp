@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 	// ----------------
 	// ----- FILE -----
 	// ----------------
-	// raw point cloud
+	// raw point cloud (.spbr)
 	std::ofstream 	fout_raw;
 	std::string		of_name_raw( OUTPUT_SPBR );
 	of_name_raw		+= "_";
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 	of_name_raw		+= ".spbr";
 	fout_raw.open( of_name_raw );
 
-	// noised point cloud
+	// noised point cloud (.spbr)
 	std::ofstream	fout_noised;
 	std::string		of_name_noised( OUTPUT_NOISED_SPBR );
 	of_name_noised	+= "_";
@@ -50,6 +50,9 @@ int main(int argc, char **argv) {
 	of_name_noised	+= argv[3];
 	of_name_noised	+= ".spbr";
 	fout_noised.open( of_name_noised );
+
+	// noise distribution (.csv)
+	std::ofstream fout_poisson_distribution("noise_distribution.csv");
 
 
 
@@ -102,6 +105,7 @@ int main(int argc, char **argv) {
     // local variables
     kvs::MersenneTwister			uniRand;
     std::poisson_distribution<> 	poissonRand(lamda);
+    //std::poisson_distribution<> 	poissonRand(1);
 	kvs::Vector3d 					point;
 	float ratio_for_apply_noise = atof(argv[3]);
 	float x, y, z;
@@ -117,20 +121,28 @@ int main(int argc, char **argv) {
 	fout_noised << "#/EndHeader"				<< std::endl;
 
 	// stochastically apply poisson noise to box point cloud
+	std::cout << "\n\n----- Stochastically add Poisson noise -----" << std::endl;
+    std::cout << "> Apply Poisson noise with " << ratio_for_apply_noise*100 << " percent.\n" << std::endl;
 	for (int i = 0; i < box_points.size(); i++) {
 		if ( uniRand() < ratio_for_apply_noise ) {
 			// P(λ)
-			x = box_points[i].x() + poissonRand(gen);
-			y = box_points[i].y() + poissonRand(gen);
-			z = box_points[i].z() + poissonRand(gen);
-			// x = poissonRand(gen);
-			// y = poissonRand(gen);
-			// z = poissonRand(gen);
-			point.set(x, y, z);
+			if ( uniRand() < 0.5 )	x = box_points[i].x() + poissonRand(gen)*diff;
+			else					x = box_points[i].x() - poissonRand(gen)*diff;
+			
+			if ( uniRand() < 0.5 )	y = box_points[i].y() + poissonRand(gen)*diff;
+			else					y = box_points[i].y() - poissonRand(gen)*diff;
+
+			if ( uniRand() < 0.5 )	z = box_points[i].z() + poissonRand(gen)*diff;
+			else 					z = box_points[i].z() - poissonRand(gen)*diff;
 
 			// write to spbr file
+			point.set(x, y, z);
 			fout_noised << point << std::endl;
 
+			// write to csv file
+			fout_poisson_distribution << i << "," << poissonRand(gen)*diff << std::endl;
+
+			// count number of noised points
 			noise_counter++;
 		}
 	}
@@ -155,6 +167,7 @@ int main(int argc, char **argv) {
 	// ----------------------
 	fout_raw.close();
 	fout_noised.close();
+	fout_poisson_distribution.close();
 
 
 
