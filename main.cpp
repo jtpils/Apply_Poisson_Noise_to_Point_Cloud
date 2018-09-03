@@ -1,10 +1,11 @@
 // 点群にポアソンノイズを適用するプログラム
 // local/KVS/Makefile.def:312
+// -std=c++11
 
 // ./applyPoissonNoise [diff] [ratio_for_lamda] [ratio_for_apply_noise]
 
 // 実行例
-// ./applyPoissonNoise 0.01 0.0001 0.2
+// ./applyPoissonNoise 0.01 1.0 0.2
 
 #include <kvs/MersenneTwister>
 #include <kvs/Vector3>
