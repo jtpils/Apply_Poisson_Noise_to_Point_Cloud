@@ -121,8 +121,8 @@ int main(int argc, char **argv) {
 	fout_noised << "#/LOD 0"					<< std::endl;
 	fout_noised << "#/EndHeader"				<< std::endl;
 
-	// stochastically apply poisson noise to box point cloud
-	std::cout << "\n\n----- Stochastically add Poisson noise -----" << std::endl;
+	// stochastically apply Poisson noise to box point cloud
+	std::cout << "\n\n----- Stochastically apply Poisson noise -----" << std::endl;
     std::cout << "> Apply Poisson noise with " << ratio_for_apply_noise*100 << " percent.\n" << std::endl;
 	for (int i = 0; i < box_points.size(); i++) {
 		if ( uniRand() < ratio_for_apply_noise ) {
