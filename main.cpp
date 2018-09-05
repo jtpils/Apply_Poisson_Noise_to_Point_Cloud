@@ -136,11 +136,11 @@ int main(int argc, char **argv) {
 			if ( uniRand() < 0.5 )	z = box_points[i].z() + poissonRand(gen)*diff;
 			else 					z = box_points[i].z() - poissonRand(gen)*diff;
 
-			// write to spbr file
+			// write to .spbr file
 			point.set(x, y, z);
 			fout_noised << point << std::endl;
 
-			// write to csv file
+			// write to .csv file
 			fout_poisson_distribution << i << "," << poissonRand(gen)*diff << std::endl;
 
 			// count number of noised points
