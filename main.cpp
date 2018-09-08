@@ -1,11 +1,29 @@
-// 点群にポアソンノイズを適用するプログラム
-// local/KVS/Makefile.def:312
-// -std=c++11
+// ---------------------------------------------------------
+// ----- Program to apply Poisson noise to point cloud -----
+// ---------------------------------------------------------
 
+// USAGE:
 // ./applyPoissonNoise [diff] [ratio_for_lamda] [ratio_for_apply_noise]
 
-// 実行例
+// Example of execution:
 // ./applyPoissonNoise 0.01 1.0 0.2
+// Diagonal length
+// > 1.73205
+
+// Lamda(average)
+// > 1.73205
+
+// Number of points "box.spbr"
+// > 1030301
+
+
+
+// ----- Stochastically add Poisson noise -----
+// > Apply Poisson noise with 20 percent.
+
+
+// Number of noised points
+// > 205868
 
 #include <kvs/MersenneTwister>
 #include <kvs/Vector3>
